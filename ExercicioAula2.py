@@ -29,7 +29,7 @@ def max_min(n,v):
     :param v: lista
     :return: (min,max)
     Retorna o maior e o menor numero de uma lista, usando apenas recurção.
-    O desempenho do software é O¹, devido a simplicidade de comparação,
+    O desempenho do software é O(n), devido a simplicidade de comparação,
     apenas comparando com o anterior da lista.
     '''
     
