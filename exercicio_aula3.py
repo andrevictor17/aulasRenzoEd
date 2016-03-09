@@ -3,7 +3,7 @@ class ListaVaziaErro(Exception):
 
 
 class Noh():
-    def __init__(self, valor, direito=None,esquerdo=None):
+    def __init__(self, valor, esquerdo= None,direito=None):
         self.direito = direito
         self.valor = valor
         self.esquerdo = esquerdo
@@ -18,12 +18,62 @@ class Lista():
         noh = Noh(valor)
         if self.tam == 0:
             self.primeiro = noh
+            self.ultimo = noh
         else:
             ultimo = self.primeiro
-            while ultimo.direita is not None:
-                ultimo = ultimo.direita
-            ultimo.direita = noh
+            while ultimo.direito is not None:
+                ultimo = ultimo.direito
+            noh.esquerdo=ultimo
+            ultimo.direito = noh
+            self.ultimo = noh
+
         self.tam += 1
+
+    def adicionar_a_esquerda(self,valor):
+        noh = Noh(valor)
+        if self.tam == 0:
+            self.primeiro = noh
+            self.ultimo = noh
+        else:
+            primeiro = self.primeiro
+            while primeiro.esquerdo is not None:
+                primeiro = primeiro.esquerdo
+            noh.direito=primeiro
+            primeiro.esquerdo = noh
+            self.primeiro= noh
+        self.tam += 1
+    def remover(self):
+        if self.tam == 0:
+            raise ListaVaziaErro()
+        elif self.tam == 1:
+            self.primeiro = None
+            self.ultimo = None
+            self.tam -= 1
+        else:
+            self.ultimo = self.ultimo.esquerdo
+            self.ultimo.direito = None
+            self.tam -= 1
+        return self.tam
+
+    def remover_a_esquerda(self):
+
+        if self.tam == 0:
+            raise ListaVaziaErro()
+        elif self.tam == 1:
+            removido = self.primeiro.valor
+            self.primeiro = None
+            self.ultimo = None
+            self.tam -= 1
+
+        else:
+            removido = self.primeiro.valor
+            self.primeiro = self.primeiro.direito
+            self.primeiro.esquerdo = None
+            self.tam -= 1
+        return removido
+
+
+
 
     def __len__(self):
         return self.tam
@@ -32,7 +82,9 @@ class Lista():
         noh_atual = self.primeiro
         while noh_atual is not None:
             yield noh_atual.valor
-            noh_atual = noh_atual.prox
+            noh_atual = noh_atual.direito
+
+
 
 
 import unittest
@@ -44,7 +96,6 @@ class NohTestes(unittest.TestCase):
         self.assertEqual(4, noh.valor)
         self.assertIsNone(noh.esquerdo)
         self.assertIsNone(noh.direito)
-        print('tudo certo')
 
     def test_init_com_no_esquerdo(self):
         esquerdo = Noh(1)
