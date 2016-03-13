@@ -40,6 +40,7 @@ def esta_balanceada(expressao):
     semelhante da lista 'fecha', quando se encontra um parametro da lista 'fecha' se tira o ultimo item da pilha
     e se compara, caso seja igual adciona +1 a variavel 'quant', se caso a variavel tiver o mesmo valor da variavel 'tam'
     a expressao está balanceada
+    A logica é simples, então sempre será O(n), pois ele varre a string toda em todos os casos   
     :return: boleano verdadeiro se expressao está balanceada e falso caso contrário
     """
     abre = ['(','[','{']
