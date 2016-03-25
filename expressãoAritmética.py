@@ -8,26 +8,28 @@ class ErroSintatico(Exception):
     pass
 
 def analise_lexica(expressao):
-    """ Executa análise lexica transformando a expressao em fila de objetos: Transforma inteiros em ints; Flutuantes em floats e verificar se demais caracteres são validos: +-*/(){}[]
-    :param expressao: string com expressao a ser analisada :return: fila com tokens """
+    """
+    A função analisa um expreção e diz se está conforme os parametros passados,logo a função verifica se contem um caracter que nao seja alguns desses "0123456789.-+*/{}[]()"
+    Tempo de execução O(n)
+     Espaço de memoria O(n)
+    :param expressao: recebe a expressao a ser analisada
+    :return: fila com os caracteres indesejados  """
 
     fila = Fila()
-    
-    tk = R"0123456789.-+*/{}[]()"
+
+    correto = R"0123456789.-+*/{}[]()"
 
     if expressao:
-
         valor = ''
-
-        for i in expressao:
-            if i in tk:
-                if i in '.-+*/{}[]()':
+        for n in expressao:
+            if n in correto:
+                if n in '(){}[].*/-+':
                     if valor:
                         fila.enfileirar(valor)
                         valor = ''
-                    fila.enfileirar(i)
+                    fila.enfileirar(n)
                 else:
-                    valor = valor + i
+                    valor = valor + n
             else:
                 raise ErroLexico()
 
@@ -39,113 +41,95 @@ def analise_lexica(expressao):
 
 def analise_sintatica(fila):
     """
-    Analisando sintaticamente os tokens produzidos via análise léxica. Executa validações sintáticas e se não houver erro retorn fila_sintatica para avaliacao: param fila: fila proveniente de análise lexica
-    :return: fila_sintatica com elementos tokens de numeros"""
+    Analisa a fila e diz se está sintatica ou nao.
+    Tempo de execução O(n)
+    Espaço de memoria O(n)
+    :param expressao: fila a ser analisada
+    :return: fila
+    """
 
-    if fila.__len__():
-        
+    if len(fila):
         fila_sintetica = Fila()
-
         valor = ''
-
-        for i in range(fila.__len__()):
-
-            if fila._deque[i] in '-+/*(){}[]':
+        for n in range(len(fila)):
+            if fila._deque[n] in '-+/*(){}[]':
                 if valor:
                     if '.' in valor:
                         fila_sintetica.enfileirar(float(valor))
                     else:
                         fila_sintetica.enfileirar(int(valor))
-
                 valor = ''
-                fila_sintetica.enfileirar(fila._deque[i])
+                fila_sintetica.enfileirar(fila._deque[n])
             else:
-                valor = valor + fila._deque[i]
-
+                valor = valor + fila._deque[n]
         if valor:
             if '.' in valor:
                 fila_sintetica.enfileirar(float(valor))
             else:
                 fila_sintetica.enfileirar(int(valor))
-
         return fila_sintetica
     else:
         raise ErroSintatico
 
-
 def avaliar(expressao):
-    """ Avaliando expressão aritmética caso não haja erros durante a realização. Complexidade de tempo: O de n -> O(n). Complexidade de memória: O de n -> O(n) """
-
+    """ Avalia a expressao e ve se está correta.
+     Tempo de execução O(n)
+     Espaço de memoria O(n)
+     :param expressao: recebe a expressao a ser analisada
+    :return: erro na expressao
+    """
     if expressao:
-
-        fila = analise_sintatica(analise_lexica(expressao))        
-
-        if fila.__len__() == 1:
+        fila = analise_sintatica(analise_lexica(expressao))
+        tamanho = len(fila)
+        if tamanho == 1:
             return fila.primeiro()
         else:
             pilha = Pilha()
-
-            for i in range(fila.__len__()):
-
-                pilha.empilhar(fila._deque[i])
-
+            for n in range(tamanho):
+                pilha.empilhar(fila._deque[n])
                 if pilha.__len__() >= 3 and str(pilha.topo()) not in '-+*/(){}[]':
-
                     valor = pilha.topo()
                     pilha.desempilhar()
-
                     if pilha.topo() == '+':
                         pilha.desempilhar()
                         valor = pilha.desempilhar() + valor
                         pilha.empilhar(valor)
-                        valor = ''
                     elif pilha.topo() == '-':
                         pilha.desempilhar()
                         valor = pilha.desempilhar() - valor
                         pilha.empilhar(valor)
-                        valor = ''
                     elif pilha.topo() == '*':
                         pilha.desempilhar()
                         valor = pilha.desempilhar() * valor
                         pilha.empilhar(valor)
-                        valor = ''
                     elif pilha.topo() == '/':
                         pilha.desempilhar()
                         valor = pilha.desempilhar() / valor
                         pilha.empilhar(valor)
-                        valor = ''
                     else:
                         pilha.empilhar(valor)
-
-                elif str(pilha.topo()) in ')}]' and i == fila.__len__() - 1:
-                    pilha.desempilhar()                    
-
+                elif str(pilha.topo()) in ')}]' and n == tamanho - 1:
+                    pilha.desempilhar()
                     while len(pilha) > 1:
-
                         if str(pilha.topo()) not in '-+*/(){}[]':
                             valor = pilha.topo()
                             pilha.desempilhar()
-
                             if pilha.topo() == '+':
                                 pilha.desempilhar()
                                 valor = pilha.desempilhar() + valor
                                 pilha.empilhar(valor)
-                                valor = ''
                             elif pilha.topo() == '-':
                                 pilha.desempilhar()
                                 valor = pilha.desempilhar() - valor
                                 pilha.empilhar(valor)
-                                valor = ''
                             elif pilha.topo() == '*':
                                 pilha.desempilhar()
                                 valor = pilha.desempilhar() * valor
                                 pilha.empilhar(valor)
-                                valor = ''
                             elif pilha.topo() == '/':
                                 pilha.desempilhar()
                                 valor = pilha.desempilhar() / valor
                                 pilha.empilhar(valor)
-                                valor = ''
                             elif str(pilha.topo()) in '(){}[]':
                                 pilha.desempilhar()
                                 pilha.empilhar(valor)
@@ -153,8 +137,6 @@ def avaliar(expressao):
                                 pilha.empilhar(valor)
                         else:
                             pilha.desempilhar()
-            
-
             return pilha.topo()
     raise ErroSintatico()
 import unittest
