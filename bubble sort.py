@@ -12,8 +12,8 @@ def bubble_sort(seq):
     :return: lista ordena pelo metodo bubble sort
     '''
 
-    cont =0
     for i_corrente in range(len(seq)-1,0,-1):
+        cont =0
         for n in range(i_corrente):
             if seq[n]>seq[n+1]:
                 seq[n] , seq[n+1] = seq[n+1],seq[n]
