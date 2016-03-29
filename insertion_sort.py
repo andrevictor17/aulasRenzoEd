@@ -10,10 +10,10 @@ def insertion_sort(seq):
     :param seq: lista
     :return: lista ordena pelo metodo insertion_sort
     '''
-    cont = 0
     for i in range(1, len(seq)):
         aux = seq[i]
         n = i
+         cont = 0
         while n > 0 and aux < seq[n - 1]:
             seq[n] = seq[n - 1]
             n -= 1
