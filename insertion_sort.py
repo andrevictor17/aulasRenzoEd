@@ -13,7 +13,7 @@ def insertion_sort(seq):
     for i in range(1, len(seq)):
         aux = seq[i]
         n = i
-         cont = 0
+        cont = 0
         while n > 0 and aux < seq[n - 1]:
             seq[n] = seq[n - 1]
             n -= 1
@@ -34,7 +34,7 @@ class OrdenacaoTestes(unittest.TestCase):
     def teste_lista_binaria(self):
         self.assertListEqual([1, 2], insertion_sort([2, 1]))
 
-    def teste_lista_binaria(self):
+    def teste_lista_desordenada(self):
         self.assertListEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], insertion_sort([9, 7, 1, 8, 5, 3, 6, 4, 2, 0]))
 
 
