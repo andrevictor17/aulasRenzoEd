@@ -3,8 +3,6 @@ def _quick_recursivo(seq):
     def sort(inicio, final):
         if inicio >= final:
             return seq
-        if not inicio < final:
-            return
         i_esquerda = inicio + 1
         i_direita = inicio + 1
         pivot = seq[inicio]
