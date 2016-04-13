@@ -2,26 +2,27 @@ import unittest
 def busca_binaria(seq, procurado):
     """
     Deve retornar o índice onde o elemento deveriar ser inserido em lista ordenada
+    O algoritimo demora O(n) em tempo de execução 
     :param procurado: elemento a ser procurado
     :param seq: sequencia a ser pesquisada
     :return: int
     """
+    seq.sort()
     n = len(seq)
     if n == 0:
         return 0
-    direita = 0
-    esquerda = n-1
-
-    while direita <= esquerda:
-        meio = (direita + esquerda) // 2
-        if procurado < seq[meio]:
-            esquerda = meio-1
-        elif procurado > seq[meio]:
-            direita = meio+1
-        else:
+    esquerda = 0
+    direito = n-1
+    while  esquerda <= direito:
+        meio = ( esquerda + direito) // 2
+        if procurado == seq[meio] and procurado != seq[meio-1]:
             return meio
+        elif procurado > seq[meio]:
+             esquerda = meio+1
+        else:
+            direito = meio-1
 
-    return direita
+    return esquerda
 
 class BuscaBinariaTestes(unittest.TestCase):
     def teste_lista_vazia(self):
