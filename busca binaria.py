@@ -2,7 +2,6 @@ import unittest
 def busca_binaria(seq, procurado):
     """
     Deve retornar o índice onde o elemento deveriar ser inserido em lista ordenada
-    O algoritimo demora O(n) em tempo de execução 
     :param procurado: elemento a ser procurado
     :param seq: sequencia a ser pesquisada
     :return: int
