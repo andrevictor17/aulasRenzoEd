@@ -1,128 +1,62 @@
-from unittest.case import TestCase
-from collections import deque
-
-
-
-class FilaVaziaErro(Exception):
-    pass
-class ArvoreVaziaErro(Exception):
-    pass
-class Fila():
-    def __init__(self):
-        self._deque = deque()
-
-    def __len__(self):
-        return len(self._deque)
-
-    def __iter__(self):
-        try:
-            while True:
-                yield self.desenfileirar()
-        except FilaVaziaErro:
-            pass
-
-    def enfileirar(self, valor):
-        return self._deque.append(valor)
-
-    def vazia(self):
-        return len(self) == 0
-
-    def primeiro(self):
-        try:
-            return self._deque[0]
-        except IndexError:
-            raise FilaVaziaErro('Não é possível obter primeiro de lista vazia')
-
-    def desenfileirar(self):
-        try:
-            return self._deque.popleft()
-        except IndexError:
-            raise FilaVaziaErro('Não é possível desenfileirar lista vazia')
-
-
-
 class Noh:
-    def __init__(self, valor, pai,irmao_direito,filho_esquerdo):
-        self.pai = pai
+    def __init__(self, valor, pai = None):
         self.valor = valor
-        self.irmao_direito = irmao_direito
-        self.filho_esquerdo = filho_esquerdo
+        self.pai = pai
+        self.filho_esquerdo = None
+        self.irmao_direito = None
 
+        if pai:
+            pai.filho_esquerdo = self
+        self.filhos = []
+
+    def adicionar(self, filho):
+        filho.pai = self
+
+        if len(self.filhos)>0:
+            proximofilho = self.filho_esquerdo
+            while proximofilho.irmao_direito:
+
+                proximofilho = proximofilho.irmao_direito
+
+            proximofilho.irmao_direito = filho
+        else:
+            self.filho_esquerdo = filho
+        self.filhos.append(filho)
 
 class Arvore:
-    def __init__(self):
-        self.tam = 0
-        self.pai= None
-        self.filho = None
-        self.irmao = None
 
-    def adicionar(self, valor):
-        noh = Noh(valor)
-        if self.tam == 0:
-            self.primeiro = noh
-            self.ultimo = noh
-        else:
-            ultimo = self.primeiro
-            while ultimo.direito is not None:
-                ultimo = ultimo.direito
-            noh.esquerdo = ultimo
-            ultimo.direito = noh
-            self.ultimo = noh
-
-        self.tam += 1
-
-    def adicionar_a_esquerda(self, valor):
-        noh = Noh(valor)
-        if self.tam == 0:
-            self.primeiro = noh
-            self.ultimo = noh
-        else:
-            primeiro = self.primeiro
-            while primeiro.esquerdo is not None:
-                primeiro = primeiro.esquerdo
-            noh.direito = primeiro
-            primeiro.esquerdo = noh
-            self.primeiro = noh
-        self.tam += 1
-
-    def remover(self):
-        if self.tam == 0:
-            raise ArvoreVaziaErro()
-        elif self.tam == 1:
-            self.primeiro = None
-            self.ultimo = None
-            self.tam -= 1
-        else:
-            self.ultimo = self.ultimo.esquerdo
-            self.ultimo.direito = None
-            self.tam -= 1
-        return self.tam
-
-    def remover_a_esquerda(self):
-
-        if self.tam == 0:
-            raise ArvoreVaziaErro()
-        elif self.tam == 1:
-            removido = self.primeiro.valor
-            self.primeiro = None
-            self.ultimo = None
-            self.tam -= 1
-
-        else:
-            removido = self.primeiro.valor
-            self.primeiro = self.primeiro.direito
-            self.primeiro.esquerdo = None
-            self.tam -= 1
-        return removido
-
-    def __len__(self):
-        return self.tam
+    def __init__(self, raiz = None):
+        self.raiz = raiz
 
     def __iter__(self):
-        noh_atual = self.primeiro
-        while noh_atual is not None:
-            yield noh_atual.valor
-            noh_atual = noh_atual.direito
+        if not self.raiz:
+            return self.raiz
+
+        pilha = []
+        pilha.append(self.raiz)
+
+        while pilha:
+            noh = pilha.pop()
+            if noh.irmao_direito:
+
+                pilha.append(noh.irmao_direito)
+
+            if noh.filho_esquerdo:
+
+                pilha.append(noh.filho_esquerdo)
+
+            yield noh.valor
+
+    def altura(self):
+        n = 0
+        final = self.raiz
+
+        while final:
+
+            final = final.filho_esquerdo
+            n += 1
+        return n
+
 
 
 from unittest.case import TestCase
