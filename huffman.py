@@ -1,19 +1,38 @@
-def calcular_frequencias(s):
-    pass
-
+ def calcular_frequencias(s):
+    dicionario = {}
+    if len(s) < 1:
+        return {}
+    else:
+        for n in s:
+            if n in dicionario.keys():
+                dicionario[n] += 1
+            else:
+                dicionario[n] = 1
+        return dicionario
 
 def gerar_arvore_de_huffman(s):
-    pass
+    folhas = []
+    for folha in calcular_frequencias(s):
+        folhas.append(Folha(folha, calcular_frequencias(s)[folha]))
 
+    folhas.sort(key = lambda f: f.peso)
+    folha = folhas.pop(0)
+    arvore = Arvore(folha.char, folha.peso)
+    while folhas:
+        folha = folhas.pop(0)
+        arvore2 = Arvore(folha.char, folha.peso)
+        arvore = arvore2.fundir(arvore)
+    return arvore
 
 def codificar(cod_dict, s):
-    pass
-
+    codigo = ""
+    for letra in s:
+        codigo += cod_dict[letra]
+    return codigo
 
 class Noh:
-    def __init__(self, peso, char='*', esquerdo=None, direito=None):
+    def __init__(self, peso, esquerdo =None, direito = None):
         self.peso = peso
-        self.char = char
         self.esquerdo = esquerdo
         self.direito = direito
 
@@ -24,27 +43,10 @@ class Noh:
         if other is None or not isinstance(other, Noh):
             return False
         return self.peso == other.peso and self.esquerdo == other.esquerdo and self.direito == other.direito
-
-    def get_freq(self):
-        return self.peso
-
-    def get_char(self):
-        return self.char
-
-    def get_left(self):
-        return self.esquerdo
-
-    def get_right(self):
-        return self.direito
-
-    def is_leaf(self):
-        return self.esquerdo == None and self.direito == None
-
 class Folha():
-    def __init__(self,char, peso):
+    def __init__(self, char, peso):
         self.peso = peso
         self.char = char
-
     def __hash__(self):
         return hash(self.__dict__)
 
@@ -53,11 +55,53 @@ class Folha():
             return False
         return self.__dict__ == other.__dict__
 
-
 class Arvore(object):
-    def __init__(self, raiz,text):
-        self.raiz = raiz
-        self._text = text
+    def __init__(self,char = None,num = None):
+        if char == None and num == None:
+            self.raiz = None
+        else:
+            self.raiz = Folha(char,num)
+
+    def decodificar(self, codigo):
+        dicionario = self.cod_dict()
+        novo = {}
+        palavra = ""
+        codigo_letra = ""
+        for valor in dicionario:
+            novo[dicionario[valor]] = valor
+        for bin in codigo:
+            codigo_letra += bin
+            if codigo_letra in novo:
+                palavra += novo[codigo_letra]
+                codigo_letra = ""
+        return palavra
+
+    def cod_dict(self):
+        dicionario = {}
+        codigo = []
+        noh = []
+        noh.append(self.raiz)
+        while noh:
+            noh_folha_atual = noh.pop()
+            if isinstance(noh_folha_atual, Noh):
+                noh.append(noh_folha_atual.direito)
+                noh.append(noh_folha_atual.esquerdo)
+                codigo.append('0')
+            elif isinstance(noh_folha_atual, Folha):
+                letra = noh_folha_atual.char
+                dicionario[letra] = ''.join(codigo)
+                codigo.pop()
+                codigo.append('1')
+        return dicionario
+
+    def fundir(self, arvore2):
+        raiz = Noh(self.raiz.peso + arvore2.raiz.peso)
+        raiz.esquerdo = self.raiz
+        raiz.direito = arvore2.raiz
+        Nova = Arvore()
+        Nova.raiz = raiz
+
+        return Nova
 
     def __hash__(self):
         return hash(self.raiz)
@@ -67,9 +111,7 @@ class Arvore(object):
             return False
         return self.raiz == other.raiz
 
-
 from unittest import TestCase
-
 
 class CalcularFrequenciaCarecteresTestes(TestCase):
     def teste_string_vazia(self):
@@ -105,7 +147,6 @@ class NohTestes(TestCase):
         self.assertEqual(3, noh.peso)
         self.assertIsNone(noh.esquerdo)
         self.assertIsNone(noh.direito)
-
 
 def _gerar_arvore_aaaa_bb_c():
     raiz = Noh(7)
