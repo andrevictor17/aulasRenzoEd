@@ -1,9 +1,41 @@
 from collections import Counter
 
-
 def soma_quadrados(n):
-    pass
+    if n == 0:
+        return [0]
+    quadrado = []
+    max = 1
+    while (max  * max <= n):
+        quadrado.append(max * max)
+        max = max + 1
 
+    historico = {0: 0}
+    while len(quadrado)> 0:
+        numero = n
+        quadrado1 = quadrado.copy()
+        x = quadrado1.pop()
+        lista = []
+        while(numero > 0):
+            if numero in historico.keys() and numero is not n:
+                lista = lista + historico[numero]
+            else:
+                if len(quadrado1) > 0:
+                    if numero - x < 0:
+                       x = quadrado1.pop()
+                    else:
+                        numero = numero - x
+                        lista.append(x)
+                        if(numero <= quadrado1[-1]):
+                            x = quadrado1.pop()
+                else:
+                    numero = numero - x
+                    lista.append(x)
+        if n not in historico.keys():
+            historico[n] = lista.copy()
+        elif len(lista) <= len(historico[n]):
+            historico[n] = lista.copy()
+        quadrado.pop()
+    return historico[n]
 
 import unittest
 
