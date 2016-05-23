@@ -1,0 +1,17 @@
+import math
+
+
+
+u = input("Digite o valor da media")
+sigma = float(input("Digite o valor do desvio padrão"))
+
+nzin = float(input("Digite o valor da amostra"))
+
+nzao = input("Digite o valor total")
+
+
+total = sigma /math.sqrt(nzin)
+
+print("%.2f" %total)
+
+
