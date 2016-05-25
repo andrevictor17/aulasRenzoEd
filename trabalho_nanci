@@ -7,11 +7,15 @@ sigma = float(input("Digite o valor do desvio padrão"))
 
 nzin = float(input("Digite o valor da amostra"))
 
-nzao = input("Digite o valor total")
+nzao = float(input("Digite o valor total"))
+
+if nzao == 0:
+    total = sigma /math.sqrt(nzin)
+else:
+    total = (sigma /math.sqrt(nzin))*((math.sqrt(nzao - nzin))/(math.sqrt(nzao-1)))
 
 
-total = sigma /math.sqrt(nzin)
+print("%.3f"%total)
 
-print("%.2f" %total)
 
 
