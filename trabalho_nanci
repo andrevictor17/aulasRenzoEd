@@ -1,21 +1,28 @@
 import math
 
+frase = (input("Digite"))
+lista = frase.split(' ')
+result = []
+
+for x in range(len (lista)):
+    if lista[x].isalpha() == False:
+        result.append(lista[x])
+
+u = float(result[0])
+sigma = float(result[1])
+
+nzin = float(result[2])
+nzao = 0
+if len(result) == 4:
+    nzao = float(result[3])
 
 
-u = input("Digite o valor da media")
-sigma = float(input("Digite o valor do desvio padrão"))
 
-nzin = float(input("Digite o valor da amostra"))
-
-nzao = float(input("Digite o valor total"))
 
 if nzao == 0:
     total = sigma /math.sqrt(nzin)
 else:
-    total = (sigma /math.sqrt(nzin))*((math.sqrt(nzao - nzin))/(math.sqrt(nzao-1)))
+    total = (sigma /(math.sqrt(nzin)))*((math.sqrt(nzao - nzin))/(math.sqrt(nzao-1)))
 
-
-print("%.3f"%total)
-
-
-
+print("A média da distribuição amostral" ,u)
+print("O desvio padrão da distribuição amostral %.3f"%total)
